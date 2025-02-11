@@ -23,6 +23,7 @@ def get_locations_within_range(lat: float, long: float, n: float, df: pd.DataFra
     def calculate_geodesic_distance(row):
         location_point = (row['lat'], row['long'])
         distance = geodesic(center_point, location_point).kilometers
+        # print(f"geodesic distance: {distance}")
         return distance if distance <= n else None
 
     # Calculate distances for all points
@@ -104,5 +105,54 @@ def plot_points_on_map(df: pd.DataFrame, searchers: List[Tuple[float, float, str
                 tooltip=name,
                 icon=folium.Icon(color='blue', icon='user')
             ).add_to(m)
+
+    return m
+
+
+def plot_route_on_map(graph, route: List[int], searcher_node: int, target_node: int, zoom_start: int = 14) -> folium.Map:
+    """
+    Plots a route on a Folium map with start and target markers.
+
+    Args:
+    - graph (pyroutelib3.osm.Graph): The road network graph.
+    - route (List[int]): List of node IDs representing the route.
+    - searcher_node (int): Node ID of the searcher's location.
+    - target_node (int): Node ID of the target Wittek location.
+    - zoom_start (int): Initial zoom level for the map.
+
+    Returns:
+    - folium.Map: A Folium map with the route plotted.
+    """
+    if not route:
+        raise ValueError("No route provided.")
+
+    # Extract coordinates of the route
+    route_coords = [(graph.nodes[node].position[0], graph.nodes[node].position[1]) for node in route]
+
+    # Map center: Middle of the route
+    center_lat = sum(lat for lat, lon in route_coords) / len(route_coords)
+    center_lon = sum(lon for lat, lon in route_coords) / len(route_coords)
+    
+    # Initialize Folium map
+    m = folium.Map(location=[center_lat, center_lon], zoom_start=zoom_start)
+
+    # Plot the route as a polyline
+    folium.PolyLine(route_coords, color="blue", weight=4.5, opacity=0.7).add_to(m)
+
+    # Add start marker (Searcher)
+    folium.Marker(
+        location=route_coords[0],
+        popup="Searcher Start",
+        tooltip="Start",
+        icon=folium.Icon(color="green", icon="play")
+    ).add_to(m)
+
+    # Add end marker (Target)
+    folium.Marker(
+        location=route_coords[-1],
+        popup="Target Location",
+        tooltip="Target",
+        icon=folium.Icon(color="red", icon="flag")
+    ).add_to(m)
 
     return m

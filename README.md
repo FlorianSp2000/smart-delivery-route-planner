@@ -29,6 +29,7 @@ The common approach consists of using open data sources like OpenStreetMap, supp
     - [geoapify](https://www.geoapify.com/pricing/): Free tier up to 3k credits per day; Premium tiers are charged monthly, not usage based. (Based on Open-Source data such as OSM)
     - [Graphhopper](https://www.graphhopper.com/) Provies two Open-Source Libraries: jsprit (Metaheuristics for TSP and VRP in Java) and [Routing Engine](https://github.com/graphhopper/graphhopper) for OSM. To have access to all APIs, premium tiers are charged monthly, not usage based.
         - [GraphHopper Navigation Example for Android ](https://github.com/graphhopper/graphhopper-navigation-example)
+    - MapBox, MapTiler
 
 
 ## So far

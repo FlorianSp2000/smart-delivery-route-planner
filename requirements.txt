@@ -5,3 +5,6 @@ geopy
 pandas
 scikit-learn
 matplotlib 
+pyrosm
+lxml
+pyroutelib3
